@@ -1,0 +1,201 @@
+<openerp>
+	<data>
+
+		<record id='hospital_trial' model='hospital.hospital'>
+			<field name='name'>hospital3</field>
+			<field name='hospital_addr'>bbbbb</field>
+			<field name='fees'>10000</field>
+			<field name='total_days'>10</field>
+			<field name='charge_per_day'>200</field>
+		</record>
+		
+		<record id='hospital_module_tree_view' model='ir.ui.view'>
+			<field name='name'>hospital tree view</field>
+			<field name='model'>hospital.hospital</field>
+			<field name='arch' type='xml'>
+				<tree string='hospital tree'>
+					<field name='name'/>
+					<field name='hospital_addr'/>
+					<field name='doctor_id'/>
+					<field name='paitent_id'/>
+				</tree>
+			</field>
+		</record>
+		
+		<record id='hospital_module_form_view' model='ir.ui.view'>
+			<field name='name'>hospital form view</field>
+			<field name='model'>hospital.hospital</field>
+			<field name='arch' type='xml'>
+				<form string='hospital form'>
+					<header>
+						<button name = "button_function" type="object" string = "Press Me" />
+						<button name = "%(action_doctor)d" type = "action" string = "Open Doctors" class = "oe_highlight" />
+					</header>
+					<group>
+						<field name='name'></field>
+						<field name='hospital_addr'/>
+						<field name = "partner_id" />
+						<field name = "fees" on_change = "onchange_fees(fees,total_days)"/>
+						<field name = "total_days" on_change = "onchange_fees(fees,total_days)" />
+						<field name = "charge_per_day" />
+						<!-- <field name='doctor_id'/>
+						<field name='paitent_id'></field>-->
+					</group>
+				</form>
+			</field>
+		</record>		
+		
+		<record id='hospital_module_form_view_ask_hopital' model='ir.ui.view'>
+			<field name='name'>hospital form view</field>
+			<field name='model'>hospital.hospital</field>
+			<field name = "priority">20</field>
+			<field name='arch' type='xml'>
+				<form string='hospital form'>
+					<sheet>
+						<group>
+							<field name = "name"/>
+							<field name = "partner_id" />
+							<field name = "fees" />
+						</group>
+						<footer>
+							<button name='save_hospital' string='save' class='oe_highlight' type='object'/>
+						</footer>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id='action_hospital' model='ir.actions.act_window'>
+			<field name="name">hospital demo</field>
+            <field name="type">ir.actions.act_window</field>
+			<field name="res_model">hospital.hospital</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+		</record>
+		
+		<record id='doctors_form_view' model='ir.ui.view'>
+			<field name='name'>doctors form view</field>
+			<field name='model'>doctor.doctor</field>
+			<field name='arch' type='xml'>
+				<form string='doctors form view'>
+					<header>
+						<button name = "open_hospital" string = "View Hospital" type = "object" class = "oe_highlight"/>
+						<button name = "open_choice_hospital" string = "Choose a hospital to open" type = "object" class = "oe_highlight" />					
+					</header>
+					<sheet>
+						<group>
+							<field name='name'></field>
+							<field name='qualification'></field>
+							<field name='specialist'></field> 
+							<field name='hospital_id'></field>
+							<field name = "attachemnet_id" widget="image" />
+							<!-- <field name='paitents_id'></field> -->
+							<!-- <field name='in_time'></field>
+							<field name='out_time'></field> -->
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record id='doctor_tree_view' model='ir.ui.view'>
+			<field name='name'>doctors tree</field>
+			<field name='model'>doctor.doctor</field>
+			<field name='arch' type='xml'>
+				<tree string='doctors tree'>
+					<field name='name'></field>
+					<field name='qualification'></field>
+					<field name='specialist'></field>
+					<field name='hospital_id'></field>
+					<field name='paitents_id'></field>
+					<!-- <field name='in_time'></field>
+					<field name='out_time'></field> -->
+				</tree>
+			</field>
+		</record> 
+		
+		<record id='action_doctor' model='ir.actions.act_window'>
+			<field name="name">doctors demo</field>
+            <field name="type">ir.actions.act_window</field>
+			<field name="res_model">doctor.doctor</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+		</record>		
+		
+		<record id='paitent_tree_view' model='ir.ui.view'>
+			<field name='name'>paitent tree view</field>
+			<field name='model'>paitent.paitent</field>
+			<field name='arch' type='xml'>
+				<tree string='paitent tree view'>
+					<field name='name'/>
+					<field name='suffering_from'></field>
+					<field name='age'/>					
+					<field name='doctors_id'/>		
+					<field name='paitent_hospital_id'></field>		
+					<field name='hospital_addr'/>	
+				</tree>
+			</field>
+		</record>
+				
+		<record id='paitent_form_view' model='ir.ui.view'>
+			<field name='name'>paitent form view</field>
+			<field name='model'>paitent.paitent</field>
+			<field name='arch' type='xml'>
+				<form string='paitent form view'>
+					<sheet>
+						<group col = "5">
+							<group colspan="3">
+								<field name='name' required = "1" string = "Patient"/>
+								<field name='age' readonly="1"/>
+								<field name='hospital_addr'/>						
+							</group>
+							<group colspan="2">
+								<field name = "id" invisible="1" />
+								<field name = "hospital_partner_id" />
+								<field name='suffering_from'></field>
+								<field name='paitent_hospital_id'></field>						
+							</group>					
+						</group>	
+						<notebook>
+							<page string = "Doctors">
+								<group>
+									<field name = "doctors_id" nolabel="1">
+										<form string='Doctors'>
+											<sheet>
+												<group>
+													<field name = "name" />
+													<field name = "qualification" />
+													<field name = "specialist" />											
+												</group>											
+											</sheet>
+										</form>
+										<tree string = "Doctors" >
+											<field name = "name" />
+											<field name = "qualification" />
+											<field name = "specialist" />
+										</tree>
+									</field>
+								</group>
+							</page>
+						</notebook>				
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record id='action_paitent' model='ir.actions.act_window'>
+			<field name='name'>paitent action</field>
+			<field name='model'>ir.actions.act_window</field>
+			<field name="res_model">paitent.paitent</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+		</record>
+		
+		<menuitem id='parent_hospital' name='hospital'></menuitem>
+		<menuitem id='child_hospital' name='hospital demo' parent='parent_hospital'/>
+		<menuitem id='child_child_hospital' name='hospital' parent='child_hospital' action='action_hospital'></menuitem>
+		<menuitem id='child_child_doctor' name='doctor' parent='child_hospital' action='action_doctor'></menuitem>
+		<menuitem id='paitent_action' name='paitent' parent='child_hospital' action='action_paitent'></menuitem>
+				
+	</data>
+</openerp>

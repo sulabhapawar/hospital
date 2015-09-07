@@ -1,0 +1,2 @@
+import hospital
+import wizard
